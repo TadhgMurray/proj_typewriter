@@ -13,6 +13,7 @@
 #ifndef __ACTIONSTACK_H__
 #define __ACTIONSTACK_H__
 
+#include <vector>
 class ActionStack {
 public:
     /* The ActionStack will store Action instances, which capture actions
@@ -43,6 +44,7 @@ public:
 
 private:
     // Add any private member variables or functions as you see fit.
+    std::vector <Action> stack;
 };
 
 
