@@ -109,7 +109,7 @@ void ActionStack::push(char c, bool was_delete, std::size_t line, std::
     elem.deleted = was_delete;
     elem.column = column;
     elem.line = line;
-    stack.push(elem);
+    push(elem);
 }
 
 /*
