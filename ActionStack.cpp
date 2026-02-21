@@ -9,6 +9,10 @@
  *
  */
 
+#include "ActionStack.h"
+
+#include <stdexcept>
+
 /*
  * name:      ActionStack
  * purpose:   creates an ActionStack object
@@ -18,7 +22,18 @@
  * other:     none
  */
 ActionStack::ActionStack() {
+}
 
+/*
+ * name:      size const
+ * purpose:   returns the size of the stack
+ * arguments: none
+ * returns:   returns int size of the stack
+ * effects:   none
+ * other:     none
+ */
+int ActionStack::size() const {
+    return stack.size();
 }
 
 /*
@@ -37,18 +52,6 @@ bool ActionStack::isEmpty() const {
 }
 
 /*
- * name:      size const
- * purpose:   returns the size of the stack
- * arguments: none
- * returns:   returns int size of the stack
- * effects:   none
- * other:     none
- */
-int ActionStack::size() const {
-    return stack.size();
-}
-
-/*
  * name:      top const
  * purpose:   returns the top Action on the stack
  * arguments: none
@@ -56,7 +59,7 @@ int ActionStack::size() const {
  * effects:   none
  * other:     if stack is empty returns nothing
  */
-Action ActionStack::top() const {
+ActionStack::Action ActionStack::top() const {
     if (isEmpty()) {
         throw std::runtime_error("empty_stack");
     }
@@ -99,8 +102,7 @@ void ActionStack::push(Action elem) {
  * effects:   increases size of stack by 1
  * other:     none
  */
-void ActionStack::push(char c, bool was_delete, std::size_t column, 
-                        std::size_t line) {
+void ActionStack::push(char c, bool was_delete, size_t column, size_t line) {
     struct Action elem;
     elem.character = c;
     elem.deleted = was_delete;
@@ -123,7 +125,6 @@ void ActionStack::clear() {
     }
 }
 
-//SHOULD PROBABLY CHANGE THIS COMMENT ITS PROBABLY REALLY BAD AND WRONG JUST SO YOU KNOW
 /*
  * name:      ~ActionStack
  * purpose:   destructor for the ActionStack class
@@ -133,5 +134,4 @@ void ActionStack::clear() {
  * other:     none
  */
 ActionStack::~ActionStack() {
-    
 }

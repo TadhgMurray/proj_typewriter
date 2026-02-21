@@ -15,36 +15,36 @@
 
 #include <vector>
 class ActionStack {
-public:
-    /* The ActionStack will store Action instances, which capture actions
-     * performed by the user. An Action comprises of: a `character`,
-     * a bool denoting whether or not that character was `deleted`, and
-     * a `line` and `column` for the character.
-     */ 
-    struct Action {
-        char character;
-        bool deleted;
-        std::size_t column;
-        std::size_t line;
-    };
+    public:
+        /* The ActionStack will store Action instances, which capture actions
+        * performed by the user. An Action comprises of: a `character`,
+        * a bool denoting whether or not that character was `deleted`, and
+        * a `line` and `column` for the character.
+        */ 
+        struct Action {
+            char character;
+            bool deleted;
+            size_t column;
+            size_t line;
+        };
 
-    /* Constructor, destructor, and member functions.
-     * See the spec for the expected behavior of each of these.
-     */
-    ActionStack();
-    ~ActionStack();
+        /* Constructor, destructor, and member functions.
+        * See the spec for the expected behavior of each of these.
+        */
+        ActionStack();
+        ~ActionStack();
 
-    bool isEmpty() const;
-    int size() const;
-    Action top() const;
-    void pop();
-    void push(Action elem);
-    void push(char c, bool was_delete, std::size_t column, std::size_t line);
-    void clear();
+        bool isEmpty() const;
+        int size() const;
+        Action top() const;
+        void pop();
+        void push(Action elem);
+        void push(char c, bool was_delete, size_t column, size_t line);
+        void clear();
 
-private:
-    // Add any private member variables or functions as you see fit.
-    std::vector <Action> stack;
+    private:
+        // Add any private member variables or functions as you see fit.
+        std::vector <Action> stack;
 };
 
 
