@@ -102,8 +102,8 @@ void ActionStack::push(Action elem) {
  * effects:   increases size of stack by 1
  * other:     none
  */
-void ActionStack::push(char c, bool was_delete, std::size_t line, std::
-                    size_t column) {
+void ActionStack::push(char c, bool was_delete, std::size_t line, 
+                        std::size_t column) {
     struct Action elem;
     elem.character = c;
     elem.deleted = was_delete;
