@@ -39,7 +39,8 @@ class ActionStack {
         Action top() const;
         void pop();
         void push(Action elem);
-        void push(char c, bool was_delete, size_t line, size_t column);
+        void push(char c, bool was_delete, std::size_t line, 
+                    std::size_t column);
         void clear();
 
     private:
