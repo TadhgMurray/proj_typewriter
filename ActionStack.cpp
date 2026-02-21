@@ -96,19 +96,19 @@ void ActionStack::push(Action elem) {
 /*
  * name:      push
  * purpose:   adds an Action element to the top of the stack
- * arguments: Char c, bool was_delete, std::size_t column, and std::size_t line
+ * arguments: Char c, bool was_delete, std::size_t line, and std::size_t column
  * to create an Action and then put it onto the stack
  * returns:   nothing
  * effects:   increases size of stack by 1
  * other:     none
  */
-void ActionStack::push(char c, bool was_delete, size_t column, size_t line) {
+void ActionStack::push(char c, bool was_delete, size_t line, size_t column) {
     struct Action elem;
     elem.character = c;
     elem.deleted = was_delete;
     elem.column = column;
     elem.line = line;
-    stack.push_back(elem);
+    stack.push(elem);
 }
 
 /*

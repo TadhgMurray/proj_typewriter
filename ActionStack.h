@@ -39,7 +39,7 @@ class ActionStack {
         Action top() const;
         void pop();
         void push(Action elem);
-        void push(char c, bool was_delete, size_t column, size_t line);
+        void push(char c, bool was_delete, size_t line, size_t column);
         void clear();
 
     private:

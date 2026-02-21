@@ -54,82 +54,44 @@
 
     Data Structures Used:
     
-    The ADT used in this project is a list of characters that supports
-    expansion, insertion, removal, and indexed access. This ADT was
-    implemented through a dynamically allocated array of characters.
-    I used that data structure because it provides O(1) access by index
-    and it allows expansion through the array growing as needed and
-    simplifies the data storage through contiguous storage in the array.
-    Some disadvantages were insertion/removal at certain indexes
-    requires shifting the elements, which is O(n) time complexity.
-    Another disadvantage is that resizing the array requires reallocating
-    the memory and copying the elements. There is also potential wasted
-    memory due to the capacity of the ArrayList being larger than its size.
-    Other circumstances where I could utilize this data structure would
-    be string builders, where characters are often copied/added/removed, like
-    what this CharArrayList class does. Another circumstance would be
-    video game inventories, where items are often added/removed, as well as
-    can be empty.
-
+    The ADT used in this project is a stack that supports adding/removing
+    elements at the top, getting the top element, and clearing the entire 
+    stack. This ADT was implemented through an arraylist, specifically
+    the vector class. I used that data structure because it had o(1) time
+    complexity for adding/removing/getting elements at the end, which is
+    how you add/remove/get elements in the stack ADT. It also provides
+    expansion through the array growing as needed and simplifies the data 
+    storage through contiguous storage in the array. The main disadvantages
+    of this implementation was that resizing the array required reallocating
+    the memory and copying the elements, which is O(n) time complexity. There
+    is also potential wasted memory due to the capacity of the stack being
+    larger than its size. A good place for this data structure to be used
+    could be checking if brackets are matched correctly(like the compiler 
+    does). This is because it only need to access the top element.
+    
     Algorithm Overview:
 
-    Expansion algorithm
+    Removal algorithm - this is the algorithm used in the pop() and clear()
+    functions. I found this algorithm interesting because I could use the
+    same algorithm for multiple functions, which allowed me to really only
+    make one function that used the algorithm, while the other functions
+    called that one, increasing modularity.
 
-    Removal algorithm - this includes algorithms such as the ones in the
-    popFromFront, popFromBack, and removeAt functions. These ones were complex
-    because if the index removed was the non-last index it required shifting
-    the elements in the array above the removed element down one.
-
-    Replace algorithm - this is the algorithm used in the replaceAt() function.
-    This one was interesting because there were multiple ways to replace the
-    element with other algorithms, such as adding the new element then 
-    removing the old element, or vice versa. The algorithm I chose just
-    replaced the element by reassigning a new value to that index of the
-    CharArrayList, which is probably the simplest method
-
-    Insert-in-Order algorithm
+    Insert algorithm
 
     Access algorithm
-
-    Copy algorithm
 
 
 (G)Testing:
 -------
 
     For each function I wrote I would then unit test it immediately after.
-    If there were functions that were very alike I would write them together
-    and test them together, like the popFromFront/Back functions. For every
-    function that an error could be thrown, I would test those scenarios in
-    multiple ways. For example, for functions where there was an index
-    I would test that exception through an index below the minimum(-1) and
-    above the maximum(size/size + 1). For the functions that would have
-    errors related to empty arraylists I would use try and
-    catch to catch the exceptions. For the regulat tests I would test the
-    function on different size of arraylists, like empty, one character,
-    and multiple character.I would also test them on different indexes
-    on those multiple characterr arraylists, like the first, middle, and
-    last indexes. I would use toString() to test the contents and size of
-    the arraylist at the same time.
-    Some bugs that were found in unit testing was the expand
-    function not having a special case for when capacity was 0, so instead
-    of expanding the capacity it would remain at 0. Another bug found in unit
-    testing was that pushAtBack() was missing the expand() function. Another
-    bug I found was in my insertInOrder() function, which would read the array
-    out of bounds because it checked the list before checking if the traversal
-    index was greater than the size of the arraylist in the if statement. The
-    function would work but it wouldn't pass valgrind due to this. A tricky 
-    function to isolate was the expand() function, because I could only
-    implicitly test it because its a private function. To test it I created
-    a very large arraylist that caused the arraylist to have to expand
-    multiple times, and then I asserted that the size of the arraylist was
-    correct. This was also tough because to test the contents of the array I
-    had to figure out what letters would be at certain indexes to assert that
-    adding them had worked correctly. Other tough tests were the unit tests 
-    that tested multiple functions, which I created after the rest of the 
-    tests. These were tough because I had to think about how the functions 
-    would work together and figuring out what the toString() should say 
-    so I could assert() it correctly.
+    I started out by writing the isEmpty(), then size(), and then the push()
+    function, because these were required to write all of the other unit tests.
+    I would unit test each function by testing it on an empty stack, a one
+    element stack, and a 100 element stack, when applicable. For the pop()/
+    push()/clear() functions I would test them by doing them one time and a
+    100 times, and I would test them on different sizes of stacks.
 
 
 (I)Hours Spent: 5 hours
