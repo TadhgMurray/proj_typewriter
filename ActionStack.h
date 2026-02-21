@@ -24,8 +24,8 @@ class ActionStack {
         struct Action {
             char character;
             bool deleted;
-            size_t column;
-            size_t line;
+            std::size_t column;
+            std::size_t line;
         };
 
         /* Constructor, destructor, and member functions.
