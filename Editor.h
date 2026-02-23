@@ -6,8 +6,8 @@
 
  */
 
-#ifndef __ACTIONSTACK_H__
-#define __ACTIONSTACK_H__
+#ifndef __EDITOR_H__
+#define __EDITOR_H__
 
 #include "ActionStack.h"
 #include "TextUI.h"
@@ -28,6 +28,8 @@ class Editor {
         std::string outfileName;
         TextUI u;
         void saveFile();
+        ActionStack undo;
+        ActionStack redo;
 };
 
 #endif
