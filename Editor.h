@@ -1,9 +1,9 @@
 /*
  * Editor.h
  *
- * CS15 Proj 2: Typewriter
+ * CS15 Projext 2: Typewriter
  * 
-
+ * 
  */
 
 #ifndef __EDITOR_H__
@@ -27,9 +27,29 @@ class Editor {
         int cursorLine;
         std::string outfileName;
         TextUI u;
+        void inputCases(int c);
+        bool commandMode();
         void saveFile();
+        void undoCommand();
+        void undoLoop();
+        void undoInsertion(ActionStack::Action a);
+        void undoDelete(ActionStack::Action a);
+        void redoCommand();
+        bool redoOriginalInsertion(ActionStack::Action a);
+        bool redoOriginalDeletion(ActionStack::Action a);
+        void arrowCases(int c);
+        void arrowLeft();
+        void arrowRight();
+        void arrowDown();
+        void arrowUp();
+        void backspace();
+        void newLine();
+        void insertCharacter(int c);
+        bool commandModeDone;
+        bool justUndid;
         ActionStack undo;
         ActionStack redo;
 };
+
 
 #endif
