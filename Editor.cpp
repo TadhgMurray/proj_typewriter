@@ -71,6 +71,7 @@ Editor::Editor(std::string filename, std::string logfile) {
     u.render(lines, cursorCol, cursorLine);
 }
 
+//read this please, undo/redo neeeddddddd to be modular ffs please(AAAAHHHHHHH)
 /*
  * name:      run
  * purpose:   changes and displays the text editor based on user input
@@ -97,7 +98,7 @@ void Editor::run() {
                 return;
             }
         }
-        else() {
+        else {
             inputCases(c);
         }
         u.render(lines, cursorCol, cursorLine);
@@ -458,8 +459,11 @@ void Editor::arrowUp() {
         cursorLine--;
         //if previous visual line was a wrap, sets to correct wrapped column
         int lastRows =  lines[cursorLine].size()/u.getTerminalWidth();
+        //offset from terminal width - column of current line 
         int offset = u.getTerminalWidth() - cursorCol;
+        //sets to final column of the terminal width of final wrap
         cursorCol = u.getTerminalWidth() * (lastRows + 1);
+        //minuses the offset from the line it was on previously
         cursorCol -= offset;
         //if line has less characters than cursorCol size, moves cursorCol to
         //end

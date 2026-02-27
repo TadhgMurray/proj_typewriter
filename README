@@ -1,19 +1,21 @@
 /******************************************************************************
 (A) Title and Author
-* Title: COMP 15 Project 1 TypeWriter
+* Title: COMP 15 Project 2 typewriter
 * README
 * Author: Tadhg Murray (tmurra01)
 * Date: 2/20/26
-* Github:https://github.com/TadhgMurray/proj_typewriter/blob/main/ActionStack.h
+* Github: https://github.com/TadhgMurray/proj_typewriter
 ******************************************************************************/
 
 
 (B)Program Purpose:
 ---------------
 
-    This program defines, implements, and tests a stack of Action objects.
-    This stack supports adding/removing/getting elements at the top, getting
-    the size/is the stack empty, and clearing the entire stack.
+    This program defines, implements, and tests a text editor.
+    The text editor allows the input of all printable characters,
+    as well as special characters like the arrow keys and backspae
+    keys. It also allows for commands such as save, close, undo and redo.
+    It can either create a new text file or edit an exisiting one.
 
 
 (C)Acknowledgments:
@@ -26,7 +28,9 @@
     received help from the TA who went over my implementation design with me,
     which helped me learn about some edgecases of the undo and redo stacks.
     I received some assistance for the vector operations I used in the 
-    ActionStack class from GeeksForGeeks vector operations documentation.
+    ActionStack class from GeeksForGeeks vector operations documentation. I
+    also received help from the ASCII table linked in the spec. Went to
+    office hours to receive help on logfile issues.
 
 
 
@@ -37,16 +41,41 @@
 
     ActionStack.h: Interface of ActionStack class
 
+    Editor.cpp: Implementation of Editor class
+    
+    Editor.h: Interface of Editor class
+
+    main.cpp: Main file handles simple driver functions such as reading in
+        filenames
+
     unit_tests.h: Unit tests for the ActionStack class
 
     README: This file
+
+    Command Input Files:
+        commands
+        commands1.txt
+        commands2
+        commands3
+        commands4
+        commands5
+        commands7
+        undo
+        redo
+        insertion
+        arrowDown
+        arrowUp
+        backspace
+        backspace2
+        arrowleftright
+        newline
 
 
 (E)Compile/run:
 -----------
 
     Compile and run the unit tests using unit_test.
-    Use Make to compile the program. Use ./TypeWriter textfile [logfile]
+    Use make to compile the program. Use ./typewriter textfile [logfile]
     to run the program.
 
 
@@ -70,6 +99,12 @@
     could be checking if brackets are matched correctly(like the compiler 
     does). This is because it only need to access the top element.
 
+    The Editor class uses this stack to hold actions in the undo/redo
+    stack. This is useful because adding something into undo/redo will
+    add it in the correct order(the reverse order), becuause undo/redo
+    are commands that reverse something, which stacks are very useful for
+    becuase they are last in first out.
+
     Algorithm Overview:
 
     Removal algorithm - this is the algorithm used in the pop() and clear()
@@ -82,17 +117,85 @@
 
     Access algorithm
 
+    Redo algorithm - this is the algorithm to redo something that has
+    been undone to the text editor. This algorithm is interesting because
+    it is the exact opposite of the undo algorithm, which allows for
+    modularity between the two. I did this because making them modular
+    allows for easier keeping track of the correct conditions to redo
+    something that has been undone(because its the oppsite of the undo)
+
+    Undo algorithm - this is the algorithm to undo something that has
+    been printed to the text editor. This algorithm was complex because
+    it required tracking and inserting/deleting newlines, which was hard
+    to do because off by one errors were incredibly easy to make and setting
+    the correct cursorCol/line was tough because of the changing lines/columns.
+
 
 (G)Testing:
 -------
 
-    For each function I wrote I would then unit test it immediately after.
+    For each function in ActionStack.cpp
+    I would write it, then I would unit test it immediately after.
     I started out by writing the isEmpty(), then size(), and then the push()
     function, because these were required to write all of the other unit tests.
     I would unit test each function by testing it on an empty stack, a one
     element stack, and a 100 element stack, when applicable. For the pop()/
     push()/clear() functions I would test them by doing them one time and a
-    100 times, and I would test them on different sizes of stacks.
+    100 times, and I would test them on different sizes of stacks. There
+    was a bug where I had to change the definitions in ActionStack.h because
+    they were missing std::.
+
+    For testing the Editor class, I started by writing main.cpp and the public
+    functions of the Editor class. In the run() function I would write each
+    input case one at a time, testing them by compiling and running the 
+    program. I tested my implentation on each case
+    on every edge case I could think of. Once
+    I got to the up and down arrow keys, I tested my implementation on every
+    edge case specified in the spec and in my design checkoff. 
+    Once I finished this part I wrote the
+    undo function, first following my design checkoff to write it. I then
+    also tested this on every edge case I could think of. I then did the
+    same with the redo function. Once I wrote and tested the redo function
+    I tested the undo/redo functions together multiple times, stress testing
+    it. For every one of these tests I did I swould compare my output to what
+    the reference implentation had. I also used keylogger to create input
+    files that would test specifically only some of the possible input
+    characters. I would then diff test the resulting logfile to the 
+    implemntation. One bug I found during this was that when I ctrl-c or
+    the end of the input file was reached without closing, my implentation's
+    logfile wouldn't save, so all of my input files had to have the close
+    command until I went to OH to fix this. I also found a bug in my up arrow
+    where if a previous line wrapped and the up arrow went up to that previous
+    line the column would be set to the size of the 
+    previous line - (terminal width -
+    cursorCol), which if the previous line did not fully fill up the width
+    of the wrapped line, would go too far to the left of the correct cursorCol.
+    To fix this I had to first calculate the current offset of the cursorCol,
+    the calculate how many wraps the previous line was, and then find the
+    column if the wrap took up the entire visual line and minus the offset.
+    If this column was above the size, then it would set it to the size.
+    Doing this I also found bugs in my undo and redo functions, mainly
+    to do with the newlines. There were a lot of off by one bugs for the
+    cursorCol/cursorLine after undoing/redoing a newline. There were also
+    bugs having to do with redo not stopping if it redoes a newline, instead
+    redoing until the .deleted variable changed. There were also many seg
+    faults due to the off by one errors. There were issues with redo clearing
+    even when it shouldn't have been cleared, to which I had to create a class
+    wide justUndid flag to track when it should be cleared. There was a bug
+    where I would press the redo command and it would redo twice, because
+    I had copy pasted the redo function twice. There was also an insert bug
+    where insert would happen after command mode was entered, to which
+    I had to create a class-wide command mode flag.
+    
+    After I was finished testing each case implentation I used keylogger to 
+    create input files filled with all of the possible inputs
+    and then used those input files and log files to
+    diff test the entirety of my program to the reference. The only bug I
+    found at this point was that my program did not render after entering
+    command mode. I added render() perhaps 5 times throughout my command
+    mode function, which did not add to the logfile. I was able to fix
+    this after going to office hours.
 
 
-(I)Hours Spent: 5 hours
+
+(I)Hours Spent: 15 hours
