@@ -31,12 +31,10 @@ class Editor {
         bool commandMode();
         void saveFile();
         void undoCommand();
-        void undoLoop();
-        void undoInsertion(ActionStack::Action a);
-        void undoDelete(ActionStack::Action a);
         void redoCommand();
-        bool redoOriginalInsertion(ActionStack::Action a);
-        bool redoOriginalDeletion(ActionStack::Action a);
+        void undoRedoLoop(ActionStack::Action a, bool redoCommand);
+        void undoRedoInsertionDeletion(ActionStack::Action a);
+        void undoRedoDeletionInsertion(ActionStack::Action a);
         void arrowCases(int c);
         void arrowLeft();
         void arrowRight();

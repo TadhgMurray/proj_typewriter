@@ -204,11 +204,51 @@ void Editor::undoCommand() {
     }
     bool firstDeleted = undo.top().deleted;
     int targetLine = undo.top().line;
-    //checks if deletion/lines changes to stop the undoing
+    bool notJustNewLine = false;
+    //checks if deletion flag/lines number changes to stop the undoing
     while (not undo.isEmpty() and undo.top().deleted == firstDeleted
             and undo.top().line == targetLine) {
         ActionStack::Action a = undo.top();
-        undoLoop();
+        //stops at newline boundary before inserting/deleting newline if
+        //another character was entered before
+        if (a.character == '\n' and notJustNewLine) {
+            return;
+        }
+        undo.pop();
+        redo.push(a);
+        //false because its an undo
+        undoRedoLoop(a, false);
+        //stops at newline boundary
+        if (a.character == '\n') {
+            return;
+        }
+        notJustNewLine = true;
+    }
+}
+
+/*
+ * name:      redoCommand
+ * purpose:   redoes previous undo
+ * arguments: none
+ * returns:   nothing
+ * effects:   changes cursorLine, cursorCol, and the lines' contents/size, adds
+ * to redo stack
+ * other:     none
+ */
+void Editor::redoCommand() {
+    if (redo.isEmpty()) {
+        return;
+    }
+    bool firstDeleted = redo.top().deleted;
+    int targetLine = redo.top().line;
+    //checks if deletion flag/line number changes to stop the redoing
+    while (not redo.isEmpty() and redo.top().deleted == firstDeleted and 
+        redo.top().line == targetLine) {
+        ActionStack::Action a = redo.top();
+        redo.pop();
+        undo.push(a);
+        //true because its a redo
+        undoRedoLoop(a, true);
         //stops at newline boundary
         if (a.character == '\n') {
             return;
@@ -225,29 +265,26 @@ void Editor::undoCommand() {
  * to redo stack
  * other:     none
  */
-void Editor::undoLoop() {
-    ActionStack::Action a = undo.top();
-    undo.pop();
-    redo.push(a);
-    //undo insertion
-    if (not a.deleted) {
-        undoInsertion(a);
+void Editor::undoRedoLoop(ActionStack::Action a, bool redoCommand) {
+    //undo an original insertion, or redo an original deletion
+    if ((not a.deleted and not redoCommand) or (a.deleted and redoCommand)) {
+        undoRedoInsertionDeletion(a);
     } 
-    //undo deletion
+    //undo an original deletion, or redo an original insertion
     else {
-        undoDelete(a);
+        undoRedoDeletionInsertion(a);
     }
 }
 
 /*
- * name:      undoInsertion
- * purpose:   undoes an insertion
+ * name:      undoRedoInsertionDeletion
+ * purpose:   erases previous text change
  * arguments: ActionStack::Action a to remove from text
  * returns:   nothing
  * effects:   moves cursorLine/cursorCol, reduces lines' contents/size
  * other:     none
  */
-void Editor::undoInsertion(ActionStack::Action a) {
+void Editor::undoRedoInsertionDeletion(ActionStack::Action a) {
     //if character is a newline copies that new line back to previous line
     //then deletes that new line and resets line and col
     if (a.character == '\n') {
@@ -267,14 +304,14 @@ void Editor::undoInsertion(ActionStack::Action a) {
 }
 
 /*
- * name:      undoDelete
- * purpose:   undoes an insertion
+ * name:      undoRedoDeletionInsertion
+ * purpose:   inserts previous text change
  * arguments: ActionStack::Action a to add to text
  * returns:   nothing
  * effects:   moves cursorLine/cursorCol, increases lines' contents/size
  * other:     none
  */
-void Editor::undoDelete(ActionStack::Action a) {
+void Editor::undoRedoDeletionInsertion(ActionStack::Action a) {
     //if character is a newline adds a new line to lines and takes rest of
     //lines contents after the newline to the new line
     if (a.character == '\n') {
@@ -288,97 +325,8 @@ void Editor::undoDelete(ActionStack::Action a) {
     else {
         lines[a.line].insert(a.column, 1, a.character);
         cursorLine = a.line;
-        cursorCol = a.column;
-    }
-}
-
-//redo fails when redoing multiple enters between, same with deleting enters,
-//but it does better
-void Editor::redoCommand() {
-    if (redo.isEmpty()) {
-        return;
-    }
-    bool firstDeleted = redo.top().deleted;
-    while (not redo.isEmpty() and redo.top().deleted == firstDeleted) {
-        ActionStack::Action a = redo.top();
-        redo.pop();
-        undo.push(a);
-        //original action was an insertion
-        if (not a.deleted) {
-            if (redoOriginalInsertion(a)) {
-                return;
-            }
-        } 
-        //original action was a deletion
-        else {
-            if (redoOriginalDeletion(a)) {
-                return;
-            }
-        }
-    }
-}
-
-/*
- * name:      redoOriginalInsertion
- * purpose:   redoes an original insertion by re-inserting it
- * arguments: ActionStack::Action a to insert into text
- * returns:   bool true/false depending on if character inserted was a newline
- * effects:   moves cursorLine/cursorCol, increases lines' contents/size
- * other:     none
- */
-bool Editor::redoOriginalInsertion(ActionStack::Action a) {
-    //if character was a newline inserts back into that line, adding the
-    //reset of that line into a new line after that original line
-    //sets line and column to start of that new line
-    if (a.character == '\n') {
-        std::string tail = lines[a.line].substr(a.column);
-        lines[a.line].erase(a.column);
-        lines.insert(lines.begin() + a.line + 1, tail);
-        cursorLine = a.line + 1;
-        cursorCol = 0;
-        return true;
-    } 
-    //otherwise inserts character back into original insertion spot,
-    //updating line and column
-    else {
-        lines[a.line].insert(a.column, 1, a.character);
-        cursorLine = a.line;
         cursorCol = a.column + 1;
     }
-    //character was not a new line so returns false(newline stopping point 
-    //not reached)
-    return false;
-}
-
-/*
- * name:      redoOriginalDeletion
- * purpose:   redoes an original deletion by re-deleting it
- * arguments: ActionStack::Action a to remove from text
- * returns:   bool true/false depending on if character removed was a newline
- * effects:   moves cursorLine/cursorCol, reduces lines' contents/size
- * other:     none
- */
-bool Editor::redoOriginalDeletion(ActionStack::Action a) {
-    //if character originally deleted was a newline adds that line that
-    //undo put on a new line to end of previous line, erase that new line
-    //sets line and column to end of that previous line 
-    if (a.character == '\n') {
-        cursorCol = lines[a.line].size();
-        lines[a.line] += lines[a.line + 1];
-        lines.erase(lines.begin() + a.line + 1);
-        cursorLine = a.line;
-        return true;
-    } 
-    //otherwise removes character in original removal spot,
-    //updating line and column
-    else {
-        lines[a.line].erase(a.column, 1);
-        cursorLine = a.line;
-        cursorCol = a.column;
-    }
-    //character was not a new line so returns false(newline stopping point 
-    //not reached)
-    return false;
 }
 
 /*
