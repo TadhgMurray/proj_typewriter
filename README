@@ -103,7 +103,7 @@
     stack. This is useful because adding something into undo/redo will
     add it in the correct order(the reverse order), becuause undo/redo
     are commands that reverse something, which stacks are very useful for
-    becuase they are last in first out.
+    because they are last in first out.
 
     Algorithm Overview:
 
@@ -186,7 +186,11 @@
     I had copy pasted the redo function twice. There was also an insert bug
     where insert would happen after command mode was entered, to which
     I had to create a class-wide command mode flag so nothing was inserted
-    after command mode was entered.
+    after command mode was entered. There was another bug when I modularized
+    my undo/redo code where redo would redo nothing or redo twice. This
+    was because I had called the undo/redo function with undo being the source
+    stack when the undo or redo command was called. This caused the redo stack
+    to not be used in redoing, just the undo stack. 
     
     After I was finished testing each case implentation I used keylogger to 
     create input files filled with all of the possible inputs
@@ -196,7 +200,6 @@
     command mode. I added render() perhaps 5 times throughout my command
     mode function, which did not add to the logfile. I was not able
     to fix this issue, but it was allowed in the spec so I kept it.
-
 
 
 (I)Hours Spent: 20 hours
