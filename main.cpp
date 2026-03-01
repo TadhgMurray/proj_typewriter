@@ -1,5 +1,5 @@
 /*
- *  Main.cpp
+ *  main.cpp
  *  Tadhg Murray (tmurra01)
  *  2/23/26
  *
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         e.run();
     }
     else {
-        std::cerr << "Usage: ./typewriter textFile [logFile]";
+        std::cerr << "Usage: ./typewriter textFile [logFile]" << std::endl;
         exit(1);
     }
     return 0;
