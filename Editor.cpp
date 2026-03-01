@@ -71,7 +71,6 @@ Editor::Editor(std::string filename, std::string logfile) {
     u.render(lines, cursorCol, cursorLine);
 }
 
-//read this please, undo/redo neeeddddddd to be modular ffs please(AAAAHHHHHHH)
 /*
  * name:      run
  * purpose:   changes and displays the text editor based on user input
@@ -195,7 +194,7 @@ void Editor::saveFile() {
  * arguments: none
  * returns:   nothing
  * effects:   changes cursorLine, cursorCol, and the lines' contents/size, adds
- * to redo stack
+ * to undo or redo stack
  * other:     none
  */
 void Editor::processUndoRedo(ActionStack &source, ActionStack &dest, 
@@ -227,8 +226,8 @@ void Editor::processUndoRedo(ActionStack &source, ActionStack &dest,
 }
 
 /*
- * name:      undoLoop
- * purpose:   loops through the undo stack, undoing actions
+ * name:      undoRedoLoop
+ * purpose:   loops through the undo or redo stack, undoing or redoing actions
  * arguments: none
  * returns:   nothing
  * effects:   changes cursorLine, cursorCol, and the lines' contents/size, adds
@@ -333,8 +332,7 @@ void Editor::backspace() {
 
 /*
  * name:      arrowCases
- * purpose:   checks if the user wants to update cursor position using arrow
- * keys
+ * purpose:   updates cursor position is user used arrow keys
  * arguments: int c ASCII index the user pressed
  * returns:   nothing
  * effects:   updates cursor position
