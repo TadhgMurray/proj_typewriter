@@ -162,11 +162,11 @@ bool Editor::commandMode() {
     }
     //undo command
     else if (c == 117) {
-        undoCommand();
+        processUndoRedo(undo, redo, false);
     }
     //redo command
     else if (c == 114) {
-        redoCommand();
+        processUndoRedo(redo, undo, true);
     }
     return false;
 }
@@ -190,69 +190,39 @@ void Editor::saveFile() {
 }
 
 /*
- * name:      undoCommand
- * purpose:   undoes previous user actions
+ * name:      processUndoRedo
+ * purpose:   undoes previous user actions or redoes previous undos
  * arguments: none
  * returns:   nothing
  * effects:   changes cursorLine, cursorCol, and the lines' contents/size, adds
  * to redo stack
  * other:     none
  */
-void Editor::undoCommand() {
-    if (undo.isEmpty()) {
+void Editor::processUndoRedo(ActionStack &source, ActionStack &dest, 
+                            bool isRedo) {
+    if (source.isEmpty()) {
         return;
     }
-    bool firstDeleted = undo.top().deleted;
-    int targetLine = undo.top().line;
+    bool firstDeleted = source.top().deleted;
+    int targetLine = source.top().line;
     bool notJustNewLine = false;
-    //checks if deletion flag/lines number changes to stop the undoing
-    while (not undo.isEmpty() and undo.top().deleted == firstDeleted
-            and undo.top().line == targetLine) {
-        ActionStack::Action a = undo.top();
-        //stops at newline boundary before inserting/deleting newline if
-        //another character was entered before
+    while (not source.isEmpty() and source.top().deleted == firstDeleted
+           and source.top().line == targetLine) {
+        ActionStack::Action a = source.top();
+        //if character is a newline but something else has already been
+        //redone/undone does not print out newline
         if (a.character == '\n' and notJustNewLine) {
             return;
         }
-        undo.pop();
-        redo.push(a);
-        //false because its an undo
-        undoRedoLoop(a, false);
-        //stops at newline boundary
+        //moves from current stack to next stack
+        source.pop();
+        dest.push(a);
+        undoRedoLoop(a, isRedo);
+        //newline stopping condition
         if (a.character == '\n') {
             return;
         }
         notJustNewLine = true;
-    }
-}
-
-/*
- * name:      redoCommand
- * purpose:   redoes previous undo
- * arguments: none
- * returns:   nothing
- * effects:   changes cursorLine, cursorCol, and the lines' contents/size, adds
- * to redo stack
- * other:     none
- */
-void Editor::redoCommand() {
-    if (redo.isEmpty()) {
-        return;
-    }
-    bool firstDeleted = redo.top().deleted;
-    int targetLine = redo.top().line;
-    //checks if deletion flag/line number changes to stop the redoing
-    while (not redo.isEmpty() and redo.top().deleted == firstDeleted and 
-        redo.top().line == targetLine) {
-        ActionStack::Action a = redo.top();
-        redo.pop();
-        undo.push(a);
-        //true because its a redo
-        undoRedoLoop(a, true);
-        //stops at newline boundary
-        if (a.character == '\n') {
-            return;
-        }
     }
 }
 

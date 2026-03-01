@@ -13,7 +13,7 @@
 
     This program defines, implements, and tests a text editor.
     The text editor allows the input of all printable characters,
-    as well as special characters like the arrow keys and backspae
+    as well as special characters like the arrow keys and backspace
     keys. It also allows for commands such as save, close, undo and redo.
     It can either create a new text file or edit an exisiting one.
 
@@ -29,8 +29,8 @@
     which helped me learn about some edgecases of the undo and redo stacks.
     I received some assistance for the vector operations I used in the 
     ActionStack class from GeeksForGeeks vector operations documentation. I
-    also received help from the ASCII table linked in the spec. Went to
-    office hours to receive help on logfile issues.
+    also received help from the ASCII table linked in the spec for finding
+    what character was inputted by the user.
 
 
 
@@ -111,7 +111,7 @@
     functions. I found this algorithm interesting because I could use the
     same algorithm for multiple functions, which allowed me to really only
     make one function that used the algorithm, while the other functions
-    called that one, increasing modularity.
+    called that one, increasing modularity(ActionStack).
 
     Insert algorithm
 
@@ -120,9 +120,9 @@
     Redo algorithm - this is the algorithm to redo something that has
     been undone to the text editor. This algorithm is interesting because
     it is the exact opposite of the undo algorithm, which allows for
-    modularity between the two. I did this because making them modular
-    allows for easier keeping track of the correct conditions to redo
-    something that has been undone(because its the oppsite of the undo)
+    modularity between the two, so when inserting a character using undo
+    or redo these can be grouped together, same with deleting. This allows
+    for using the same conditions for both algorithms to redo it
 
     Undo algorithm - this is the algorithm to undo something that has
     been printed to the text editor. This algorithm was complex because
@@ -185,7 +185,8 @@
     where I would press the redo command and it would redo twice, because
     I had copy pasted the redo function twice. There was also an insert bug
     where insert would happen after command mode was entered, to which
-    I had to create a class-wide command mode flag.
+    I had to create a class-wide command mode flag so nothing was inserted
+    after command mode was entered.
     
     After I was finished testing each case implentation I used keylogger to 
     create input files filled with all of the possible inputs
@@ -193,9 +194,9 @@
     diff test the entirety of my program to the reference. The only bug I
     found at this point was that my program did not render after entering
     command mode. I added render() perhaps 5 times throughout my command
-    mode function, which did not add to the logfile. I was able to fix
-    this after going to office hours.
+    mode function, which did not add to the logfile. I was not able
+    to fix this issue, but it was allowed in the spec so I kept it.
 
 
 
-(I)Hours Spent: 15 hours
+(I)Hours Spent: 20 hours
