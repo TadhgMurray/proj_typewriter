@@ -19,7 +19,7 @@
 //tests ActionStack isEmpty() on an empty ActionStack
 void asIsEmptyTest() {
     ActionStack as;
-    assert(as.isEmpty() == true);
+    assert(as.isEmpty());
 }
 
 //tests ActionStack isEmpty() on a one element ActionStack
@@ -31,7 +31,7 @@ void asIsEmpty1ElementTest() {
     a.column = 0;
     a.line = 0;
     as.push(a);
-    assert(as.isEmpty() == false);
+    assert(not as.isEmpty());
     
 }
 
@@ -46,7 +46,7 @@ void asIsEmpty100ElementTest() {
     for (int i = 0; i < 100; i++) {
         as.push(a);
     }
-    assert(as.isEmpty() == false);
+    assert(not as.isEmpty());
 }
 
 //tests ActionStack size() on an empty ActionStack
@@ -78,7 +78,7 @@ void asSize100Test() {
     for (int i = 0; i < 100; i++) {
         as.push(a);
     }
-    assert(as.isEmpty() == false);
+    assert(not as.isEmpty());
 }
 
 //tests ActionStack top() on an empty ActionStack
@@ -215,7 +215,7 @@ void asAltPushEmpyTest() {
     ActionStack as;
     as.push('a', true, 0, 0);
     assert(as.top().character == 'a');
-    assert(as.top().deleted == true);
+    assert(as.top().deleted);
     assert(as.top().column == 0);
     assert(as.top().line == 0);
     assert(as.size() == 1);
@@ -228,7 +228,7 @@ void asAltPush100ElementsTest() {
         as.push('a', true, 0, 0);
     }
     assert(as.top().character == 'a');
-    assert(as.top().deleted == true);
+    assert(as.top().deleted);
     assert(as.top().column == 0);
     assert(as.top().line == 0);
     assert(as.size() == 100);
@@ -243,7 +243,7 @@ void asAltPush100ElementsFinalUniqueTest() {
     }
     as.push('b', false, 1, 1);
     assert(as.top().character == 'b');
-    assert(as.top().deleted == false);
+    assert(not as.top().deleted);
     assert(as.top().column == 1);
     assert(as.top().line == 1);
     assert(as.size() == 100);
@@ -276,7 +276,7 @@ void asPopOneElementTest() {
     as.push(a);
     as.pop();
     assert(as.size() == 0);
-    assert(as.isEmpty() == true);
+    assert(as.isEmpty());
 }
 
 //tests ActionStack pop() on a 100 element ActionStack
@@ -296,7 +296,7 @@ void asPop100ElementsTest() {
     assert(as.top().column == a.column);
     assert(as.top().line == a.line);
     assert(as.size() == 99);
-    assert(as.isEmpty() == false);
+    assert(not as.isEmpty());
 }
 
 //tests ActionStack pop() on an empty ActionStack
@@ -322,7 +322,7 @@ void asPop100ElementsTopUniqueTest() {
     assert(as.top().column == a.column);
     assert(as.top().line == a.line);
     assert(as.size() == 99);
-    assert(as.isEmpty() == false);
+    assert(not as.isEmpty());
 }
 
 //tests ActionStack pop() to clear ActionStack
@@ -340,7 +340,7 @@ void asPopAllElements() {
         as.pop();
     }
     assert(as.size() == 0);
-    assert(as.isEmpty() == true);
+    assert(as.isEmpty());
 }
 
 //tests ActionStack clear() on an empty stack
@@ -348,7 +348,7 @@ void asClearEmptyTest() {
     ActionStack as;
     as.clear();
     assert(as.size() == 0);
-    assert(as.isEmpty() == true);
+    assert(as.isEmpty());
 }
 
 //tests ActionStack clear() on a one element stack
@@ -362,7 +362,7 @@ void asClear1ElementTest() {
     as.push(a);
     as.clear();
     assert(as.size() == 0);
-    assert(as.isEmpty() == true);
+    assert(as.isEmpty());
 }
 
 //tests ActionStack clear() on a 100 element stack
@@ -378,5 +378,5 @@ void asClear100ElelmentsTest() {
     }
     as.clear();
     assert(as.size() == 0);
-    assert(as.isEmpty() == true);
+    assert(as.isEmpty());
 }
