@@ -483,6 +483,7 @@ void Editor::newLine() {
     while (cursorLine > lines.size()) {
         lines.push_back("");
     }
+    //moves rest of line after cursor down on a new line
     lines.insert(lines.begin() + cursorLine, s);
     cursorCol = 0;
     justUndid = false;

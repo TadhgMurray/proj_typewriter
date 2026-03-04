@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
         Editor e(argv[1], argv[2]);
         e.run();
     }
-    else if(argc == 2){
+    else if(argc == 2) {
         Editor e(argv[1]);
         e.run();
     }
